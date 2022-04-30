@@ -5,7 +5,7 @@ export default {
 </script>
 
 <script setup>
-import AppMain from '@/common/AppMain.vue'
+import AppMain from '@/components/common/AppMain.vue'
 </script>
 
 <template>
