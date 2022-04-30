@@ -11,6 +11,8 @@
 </template>
 
 
-<style scoped>
-
+<style>
+main {
+  height: 100%;
+}
 </style>

@@ -1,12 +1,17 @@
 <script setup>
-import AppHeader from './layout/AppHeader.vue';
-import AppMain from './layout/AppMain.vue';
+import AppLayout from '@/layout/index.vue'
 </script>
 
 <template>
-  <AppHeader />
-  <AppMain />
+  <AppLayout />
 </template>
 
 <style>
+* {
+  font-family: 'Dongle', 'san-serif';
+}
+body {
+  font-size: 1em;
+  height: 900px;
+}
 </style>
