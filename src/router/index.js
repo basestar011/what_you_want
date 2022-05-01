@@ -7,16 +7,20 @@ export default createRouter({
     {
       path: '',
       meta: {
-        layout: LAYOUT.Guest
+        layout: LAYOUT.guest
       },
       component: () => import('@/views/HomePage.vue')
     },
     {
       path: '/quiz',
       meta: {
-        layout: LAYOUT.Guest
+        layout: LAYOUT.guest
       },
       component: () => import('@/views/QuizPage.vue')
+    },
+    {
+      path: '/wishlist',
+      component: () => import('@/views/WishListPage.vue')
     }
   ]
 });

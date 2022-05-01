@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <header v-if="$router.path">
+  <header>
     <h1>What Do You Want ?</h1>
   </header>
 </template>
