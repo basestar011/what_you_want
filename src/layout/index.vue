@@ -10,7 +10,7 @@ import LayoutGuest from './LayoutGuest.vue';
 import { LAYOUT } from '@/common/constants'
 import { useRoute } from 'vue-router';
 import { computed, onBeforeMount, reactive, unref, watch, defineAsyncComponent, shallowRef, watchEffect } from 'vue'
-import { eagerComputed } from '@/hooks'
+import { eagerComputed } from '@/utils/computed'
 
 const $route = useRoute();
 const recode = computed(() => $route.matched.find(recode => recode.meta.layout));
