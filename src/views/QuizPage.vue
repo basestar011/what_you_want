@@ -5,26 +5,27 @@ export default {
 </script>
 
 <script setup>
-import { ref, unref, computed, reactive } from 'vue'
-import { stepDefinitions } from '@/components/step'
-import DefaultStep from '@/components/step/DefaultStep.vue'
+import { computed, reactive } from 'vue'
+import { quizDefinitions } from '@/components/quiz/quiz.config'
+import QuizStep from '@/components/quiz/QuizStep.vue'
+import QuizComplete from '@/components/quiz/QuizComplete.vue';
 
 const state = reactive({
   step: 0,
-  question: computed(() => stepDefinitions[state.step] && stepDefinitions[state.step].question),
-  answer: computed(() => stepDefinitions[state.step] && stepDefinitions[state.step].answer),
-  isComplete: computed(() => state.step === stepDefinitions.length)
+  question: computed(() => quizDefinitions[state.step] && quizDefinitions[state.step].question),
+  answer: computed(() => quizDefinitions[state.step] && quizDefinitions[state.step].answer),
+  isComplete: computed(() => state.step === quizDefinitions.length)
 });
 
-// 다음 스탭 함수
-const nextStep = () => {
+// 다음 퀴즈 함수
+const nextQuiz = () => {
   // step.value++;
   state.step++;
 }
 // 답 체크 함수
 const submitAnswer = (input) => {
   if(state.answer === input) {
-    nextStep();
+    nextQuiz();
   } else {
     alert('땡!!!');
     if(state.step !== 0) {
@@ -38,13 +39,12 @@ const submitAnswer = (input) => {
 <template>
   <div class="container">
     <template v-if="state.isComplete">
-      <h1>코드 힌트</h1>
-      <p>우리가 처음 사귀게 된 장소 (영어로)</p>
+      <QuizComplete />
     </template>
     <template v-else>
       <h1>퀴즈 {{ state.step + 1 }}</h1>
       <div class="step-wrapper">
-        <DefaultStep
+        <QuizStep
           :question="state.question"
           @submit="submitAnswer"
         />

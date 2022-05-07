@@ -6,7 +6,7 @@ const code = ref(null);
 const router = useRouter();
 
 function connect(e) {
-  if(unref(code) === 'roof808') {
+  if(unref(code) === 'test code') {
     router.push('/wishlist');
   } else {
     alert('좀 더 분발하세요!');
