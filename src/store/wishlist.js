@@ -11,11 +11,11 @@ export const useWishlistStore = defineStore('wishlist', {
       (id) => state.categories.find(category => category.id === id),
   },
   actions: {
-    async fetchAllCategory() {
-      return apiClient.get('/category');
+    fetchAllCategory() {
+      return apiClient.get('/categories');
     },
-    async fetchCategoryById(id) {
-      return apiClient.get(`/category/${id}`);
+    fetchCategoryById(id) {
+      return apiClient.get(`/categories/${id}`);
     },
   }
 });

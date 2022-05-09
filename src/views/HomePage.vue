@@ -1,15 +1,21 @@
 <script setup>
-import { ref, unref } from 'vue';
+import { reactive, toRaw } from 'vue';
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
-const code = ref(null);
+const state = reactive({
+  id: '', password: ''
+});
 const router = useRouter();
 
-function connect(e) {
-  if(unref(code) === 'test code') {
-    router.push('/wishlist');
-  } else {
-    alert('좀 더 분발하세요!');
+async function connect(e) {
+  try {
+    const form = toRaw(state);
+    console.log('formdata', form)
+    const response = await axios.post('http://localhost:8000/auth', form);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
   }
 }
 </script>
@@ -18,7 +24,8 @@ function connect(e) {
   <div class="container">
     <p>What Do You Want?</p>
     <form @submit.prevent="connect">
-      <input type="text" placeholder="코드를 입력하세요" v-model="code"/>
+      <input type="text" placeholder="아이디" v-model="state.id"/>
+      <input type="text" placeholder="패스워드" v-model="state.password"/>
       <button type="submit">접속</button>
     </form>
     <router-link to="/quiz">퀴즈로 코드 힌트 얻기 :)</router-link>
