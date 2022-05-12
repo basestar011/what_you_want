@@ -28,9 +28,9 @@ const addCategory = async () => {
 
 onBeforeMount(async () => {
   try {
-    const response = await wishlistStore.fetchAllCategory();
+    const response = await categoryStore.fetchAllCategory();
     if(response.status === 200) {
-      wishlistStore.categories = response.data;
+      categoryStore.categories = response.data;
     }
   } catch (error) {
     console.log(error);

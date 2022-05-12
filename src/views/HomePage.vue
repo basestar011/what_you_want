@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, toRaw } from 'vue';
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { useAuthStore } from '@/store/auth'
 
 const state = reactive({
   id: '', password: ''
@@ -12,8 +12,8 @@ async function connect(e) {
   try {
     const form = toRaw(state);
     console.log('formdata', form)
-    const response = await axios.post('http://localhost:8000/auth', form);
-    console.log(response);
+    const authStore = useAuthStore();
+    authStore.login(form);
   } catch (error) {
     console.log(error);
   }
