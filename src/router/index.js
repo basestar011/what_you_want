@@ -19,8 +19,8 @@ export default createRouter({
       component: () => import('@/views/QuizPage.vue')
     },
     {
-      path: '/wishlist',
-      component: () => import('@/views/WishListPage.vue')
+      path: '/content',
+      component: () => import('@/views/ContentPage.vue')
     }
   ]
 });

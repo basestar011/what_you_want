@@ -1,14 +1,14 @@
 <script>
 export default {
-  name: 'WishListPage'
+  name: 'ContentPage'
 }
 </script>
 
 <script setup>
-import { useWishlistStore } from '@/store/wishlist'
+import { useCategoryStore } from '@/store/category'
 import { onBeforeMount, reactive, toRaw } from 'vue';
 
-const wishlistStore = useWishlistStore();
+const categoryStore = useCategoryStore();
 const state = reactive({ name: '', description: '' });
 
 const addCategory = async () => {
@@ -22,7 +22,7 @@ const addCategory = async () => {
     return false;
   }
 
-  const response = await wishlistStore.addCategory(toRaw(state));
+  const response = await categoryStore.addCategory(toRaw(state));
   console.log(response);
 }
 
@@ -40,7 +40,7 @@ onBeforeMount(async () => {
 
 <template>
   <div>
-    <h1>WISH LIST</h1>
+    <h1>Content Page</h1>
     <input type="text" v-model="state.name" />
     <textarea cols="30" rows="10" v-model="state.description"></textarea>
     <button @click="addCategory">추가</button>
