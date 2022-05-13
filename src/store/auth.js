@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { apiClient } from '../utils/api'
 import router from '../router'
 
 export const useAuthStore = defineStore('auth', {
@@ -12,7 +11,7 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async login(user) {
-      const { data } = await apiClient.post('/auth/login', user);
+      // const { data } = await apiClient.post('/auth/login', user);
       this.token = data.token;
       localStorage.setItem('token', data.token);
       router.push('/content');

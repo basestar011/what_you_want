@@ -29,6 +29,7 @@ const addCategory = async () => {
 onBeforeMount(async () => {
   try {
     const response = await categoryStore.fetchAllCategory();
+    console.log('fetch response', response);
     if(response.status === 200) {
       categoryStore.categories = response.data;
     }
