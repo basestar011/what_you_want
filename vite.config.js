@@ -2,23 +2,25 @@ import { fileURLToPath, URL } from 'url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// 기본 .env 로드
-const env = loadEnv(/*mode*/null, process.cwd(), "WDYW");
-const htmlPlugin = () => {
-    return {
-        name: "html-transform",
-        transformIndexHtml(html) {
-            return html.replace(/%(.*?)%/g, (match, p1) => env[p1]);
-        },
-    };
-};
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), 'WDYW');
+  /** index.html 로드 시 env 파일에서 title을 replace해주는 함수 */
+  const htmlPlugin = () => {
+      return {
+          name: "html-transform",
+          transformIndexHtml(html) {
+              return html.replace(/%(.*?)%/g, (match, p1) => env[p1]);
+          },
+      };
+  };
 
-export default defineConfig({
-  plugins: [vue(), htmlPlugin()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  },
-  envPrefix: 'WDYW'
+  return {
+    plugins: [vue(), htmlPlugin()],
+    envPrefix: 'WDYW',
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
+    },
+  }
 })
