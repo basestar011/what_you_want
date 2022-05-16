@@ -1,19 +1,17 @@
 <script setup>
 import { reactive, toRaw } from 'vue';
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 
 const state = reactive({
   id: '', password: ''
 });
-const router = useRouter();
 
 async function connect(e) {
   try {
     const form = toRaw(state);
     console.log('formdata', form)
     const authStore = useAuthStore();
-    authStore.login(form);
+    await authStore.login(form);
   } catch (error) {
     console.log(error);
   }
@@ -28,7 +26,7 @@ async function connect(e) {
       <input type="text" placeholder="패스워드" v-model="state.password"/>
       <button type="submit">접속</button>
     </form>
-    <router-link to="/quiz">퀴즈로 코드 힌트 얻기 :)</router-link>
+    <!-- <router-link to="/quiz">퀴즈로 코드 힌트 얻기 :)</router-link> -->
   </div>
 </template>
 
