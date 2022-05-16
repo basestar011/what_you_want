@@ -6,28 +6,22 @@ export default {
 
 <script setup>
 import { useCategoryStore } from '@/store/category'
-import { onBeforeMount, reactive, toRaw } from 'vue';
+import { onBeforeMount, toRaw, ref } from 'vue';
+import CategoryList from '@/components/category/CategoryList.vue';
+import CategoryAdd from '@/components/category/CategoryAdd.vue';
 
 const categoryStore = useCategoryStore();
-const state = reactive({ name: '', description: '' });
 
-const addCategory = async () => {
-  if(state.name.trim() === '') {
-    alert('카테고리 이름을 입력하세요');
-    return false;
-  }
+const categoryAdd = ref(null);
 
-  if(state.description.trim() === '') {
-    alert('카테고리 설명을 입력하세요');
-    return false;
-  }
-
+const addCategory = async (category) => {
   try {
-    const { status, data } = await categoryStore.addCategory(toRaw(state));
+    const { status, data } = await categoryStore.addCategory(category);
     if(status === 201) {
       alert('추가되었습니다.');
-      await categoryStore.fetchAllCategory();
     }
+      await categoryStore.fetchAllCategory();
+      categoryAdd.value.clearForm();
   } catch (error) {
     console.error(error);
     alert('카테고리 추가 중에 에러가 발생했습니다.');
@@ -44,21 +38,18 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Content Page</h1>
-  </div>
-  <div>
-    <ul>
-      <li v-for="category in categoryStore.list">
-        ({{ category.code }}) {{ category.name }}
-      </li>
-    </ul>
-  </div>
-  <div>
-    <input type="text" v-model="state.name" />
-    <textarea cols="30" rows="10" v-model="state.description"></textarea>
-    <button @click="addCategory">추가</button>
-  </div>
+  <article>
+    <header>
+      <h1>Content Page</h1>
+    </header>
+    <nav>
+      <CategoryList :categories="categoryStore.list" />
+      <CategoryAdd @category:add="addCategory" ref="categoryAdd"/>
+    </nav>
+    <section>
+
+    </section>
+  </article>
 </template>
 
 <style scoped>

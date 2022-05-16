@@ -31,6 +31,12 @@ export const useCategoryStore = defineStore('category', {
     },
     deleteCategory(code) {
       return useAuthClient(`/categories/${code}`, 'DELETE');
+    },
+    getContentsByCategory(code) {
+      return useAuthClient(`/categories/${code}/contents`, 'GET');
+    },
+    addContentByCategory(code, content) {
+      return useAuthClient(`/categories/${code}/contents`, 'POST', content);
     }
   }
 });
