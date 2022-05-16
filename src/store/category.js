@@ -1,29 +1,36 @@
 import { defineStore } from 'pinia'
-import { apiClient } from '../utils/api'
+import { useAuthClient } from '../hooks'
+import { handleError } from '../utils/error'
 
 export const useCategoryStore = defineStore('category', {
   state: () => ({
-    categories: [],
+    list: [],
   }),
   getters: {
     getCategoryByCode: (state) => 
       (code) => state.categories.find(category => category.code === code),
   },
   actions: {
-    fetchAllCategory() {
-      return apiClient.get('/categories');
+    async fetchAllCategory() {
+      try {
+        const { data } = await useAuthClient('/categories', 'GET');
+        this.list = data.categories;
+        return data.categories;
+      } catch (error) {
+        return handleError(error);
+      }
     },
     fetchCategoryByCode(code) {
-      return apiClient.get(`/categories/${code}`);
+      return useAuthClient(`/categories/${code}`, 'GET');
     },
     addCategory(category) {
-      return apiClient.post('/categories', category);
+      return useAuthClient('/categories', 'POST', category);
     },
     updateCategory({ code, ...data }) {
-      return apiClient.patch(`/categories/${code}`, data);
+      return useAuthClient(`/categories/${code}`, 'PATCH', data);
     },
     deleteCategory(code) {
-      return apiClient.delete(`/categories/${code}`);
+      return useAuthClient(`/categories/${code}`, 'DELETE');
     }
   }
 });
