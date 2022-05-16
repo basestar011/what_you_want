@@ -1,21 +1,26 @@
 import { defineStore } from 'pinia'
-import router from '../router'
 import { useClient } from '../hooks'
+import router from '../router'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: localStorage.getItem('token')
+    token: null
   }),
   getters: {
-    getToken: (state) => (state.token || localStorage.getItem('token')),
-    getBearerToken() { return `Bearer ${this.getToken}` }
+    isAuthenticated: (state) => !!state.token,
+    bearerToken: (state) => `Bearer ${state.token}`
   },
   actions: {
     async login(user) {
       const { data } = await useClient('/auth/login', 'POST', user);
-      this.token = data.token;
-      localStorage.setItem('token', data.token);
-      router.push('/content');
+      this.token = data;
+      localStorage.setItem('token', data);
+      return data;
+    },
+    logout() {
+      this.token = null;
+      localStorage.removeItem('token');
+      router.push('/login');
     }
   }
 })

@@ -46,7 +46,7 @@ export const useAuthClient = async (url, method, data, config) => {
   const requestConfig = {
     ...config,
     headers: {
-      'Authorization': authStore.getBearerToken
+      'Authorization': authStore.bearerToken
     }
   }
   

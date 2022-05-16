@@ -7,7 +7,7 @@ export const handleError = (error) => {
     if(status === 401) {
       if(name === 'TokenExpiredError') {
         alert('세션이 만료되었습니다.');
-        router.push('/');
+        router.push('/login');
       } else {
         return { name, message };
       }

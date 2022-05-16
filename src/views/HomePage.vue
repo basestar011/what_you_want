@@ -1,19 +1,20 @@
 <script setup>
 import { reactive, toRaw } from 'vue';
 import { useAuthStore } from '@/store/auth'
+import { useRouter } from 'vue-router'
 
 const state = reactive({
   id: '', password: ''
 });
 
-async function connect(e) {
+const router = useRouter();
+
+async function login(e) {
   try {
-    const form = toRaw(state);
-    console.log('formdata', form)
-    const authStore = useAuthStore();
-    await authStore.login(form);
+    await useAuthStore().login(toRaw(state));
+    router.push('/content');
   } catch (error) {
-    console.log(error);
+    alert(`${error.name} : ${error.message}`);
   }
 }
 </script>
@@ -21,7 +22,7 @@ async function connect(e) {
 <template>
   <div class="container">
     <p>What Do You Want?</p>
-    <form @submit.prevent="connect">
+    <form @submit.prevent="login">
       <input type="text" placeholder="아이디" v-model="state.id"/>
       <input type="text" placeholder="패스워드" v-model="state.password"/>
       <button type="submit">접속</button>

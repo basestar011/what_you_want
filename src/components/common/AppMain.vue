@@ -14,5 +14,7 @@
 <style>
 main {
   height: 100%;
+  min-width: 600px;
+  margin: 0 10em;
 }
 </style>
