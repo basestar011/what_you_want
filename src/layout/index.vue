@@ -9,7 +9,7 @@ import LayoutDefault from './LayoutDefault.vue';
 import LayoutGuest from './LayoutGuest.vue';
 import { LAYOUT } from '@/common/constants'
 import { useRoute } from 'vue-router';
-import { computed, onBeforeMount, reactive, unref, watch, defineAsyncComponent, shallowRef, watchEffect } from 'vue'
+import { computed, shallowRef, watchEffect } from 'vue'
 import { eagerComputed } from '@/utils/computed'
 
 const $route = useRoute();
@@ -18,23 +18,19 @@ const layout = eagerComputed(() => recode.value ? recode.value.meta.layout : LAY
 
 const layoutComponent = shallowRef();
 
-watch(layout, async (value) => {
-  layoutComponent.value = await loadComponent(value);
+watchEffect(() => {
+  layoutComponent.value = loadComponent(layout.value);
 });
 
-async function loadComponent(layout) {
+function loadComponent(layout) {
   switch (layout) {
     case LAYOUT.guest:
-      return defineAsyncComponent(() => import('./LayoutGuest.vue'));
+      return LayoutGuest;
     case LAYOUT.default: 
     default:
-      return defineAsyncComponent(() => import('./LayoutDefault.vue'));
+      return LayoutDefault;
   }
 };
-
-onBeforeMount(async () => {
-  layoutComponent.value = await loadComponent(unref(layout));
-});
 </script>
 
 <template>
