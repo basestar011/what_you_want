@@ -9,12 +9,12 @@ import { reactive, toRaw } from 'vue'
 
 const state = reactive({ name: '', description: '' });
 
-const emit = defineEmits(['category:add']);
 const clearForm = () => {
   state.name = '';
   state.description = '';
 }
 defineExpose({ clearForm })
+const emit = defineEmits(['category:add']);
 
 const addCategory = (e) => {
   if(state.name.trim() === '') {

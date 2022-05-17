@@ -30,15 +30,25 @@ const router = createRouter({
         layout: LAYOUT.default,
         auth: true,
       },
-      component: () => import('@/views/ContentPage.vue')
+      component: () => import('@/views/ContentPage.vue'),
+      children: [
+        {
+          path: '',
+          component: () => import('@/components/content/ContentList.vue')
+        },
+        {
+          path: 'create',
+          component: () => import('@/components/content/ContentCreate.vue')
+        }
+      ]
     }
   ]
 });
 
 router.beforeEach(async (to, from) => {
   const recode = to.matched.find(recode => recode.meta.auth);
+  // 인증이 필요한 페이지
   if(recode && recode.meta.auth) {
-    // 인증이 필요한 페이지
     const authStore = useAuthStore();
     // 로그인이 되어 있는 상태
     if(authStore.isAuthenticated) {

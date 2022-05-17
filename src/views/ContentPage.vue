@@ -20,8 +20,8 @@ const addCategory = async (category) => {
     if(status === 201) {
       alert('추가되었습니다.');
     }
-      await categoryStore.fetchAllCategory();
-      categoryAdd.value.clearForm();
+    await categoryStore.fetchAllCategory();
+    categoryAdd.value.clearForm();
   } catch (error) {
     console.error(error);
     alert('카테고리 추가 중에 에러가 발생했습니다.');
@@ -47,7 +47,7 @@ onBeforeMount(async () => {
       <CategoryAdd @category:add="addCategory" ref="categoryAdd"/>
     </nav>
     <section>
-
+      <router-view></router-view>
     </section>
   </article>
 </template>

@@ -25,7 +25,7 @@ async function login(e) {
     <form @submit.prevent="login">
       <input type="text" placeholder="아이디" v-model="state.id"/>
       <input type="text" placeholder="패스워드" v-model="state.password"/>
-      <button type="submit">접속</button>
+      <button type="submit">로그인</button>
     </form>
     <!-- <router-link to="/quiz">퀴즈로 코드 힌트 얻기 :)</router-link> -->
   </div>
