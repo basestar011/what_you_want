@@ -4,7 +4,7 @@ export default {
 }
 </script>
 
-<script setup>
+<script setup lang="ts">
 import Category from './Category.vue';
 
 const props = defineProps({

@@ -4,7 +4,7 @@ export default {
 }
 </script>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   category: {
     type: Object,

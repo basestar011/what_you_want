@@ -4,7 +4,7 @@ export default {
 }
 </script>
 
-<script setup>
+<script setup lang="ts">
 import { computed, reactive } from 'vue'
 import { quizDefinitions } from '@/components/quiz/quiz.config'
 import QuizStep from '@/components/quiz/QuizStep.vue'

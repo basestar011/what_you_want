@@ -4,7 +4,7 @@ export default {
 }
 </script>
 
-<script setup>
+<script setup lang="ts">
 import { useCategoryStore } from '@/store/category'
 import { onBeforeMount, toRaw, ref } from 'vue';
 import CategoryList from '@/components/category/CategoryList.vue';

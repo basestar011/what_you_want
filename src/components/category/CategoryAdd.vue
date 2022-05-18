@@ -4,7 +4,7 @@ export default {
 }
 </script>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, toRaw } from 'vue'
 
 const state = reactive({ name: '', description: '' });

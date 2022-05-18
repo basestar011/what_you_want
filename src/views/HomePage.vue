@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, toRaw } from 'vue';
 import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'vue-router'
