@@ -1,5 +1,5 @@
-export interface Content {
+export interface Content<T> {
   title: string
-  detail: object
+  detail: T,
   category_id: number
 }

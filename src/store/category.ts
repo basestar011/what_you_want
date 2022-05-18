@@ -1,43 +1,48 @@
 import { defineStore } from 'pinia'
-import { useAuthClient } from '../hooks'
+import { useAuthGet, useAuthPost, useAuthPatch, useAuthDelete } from '../hooks/http'
 import { handleError } from '../utils/error'
-import { Method } from '../types/enums'
+import { Category } from '@/types/models/category';
 
-export const useCategoryStore = defineStore('category', {
+export type CategoryState = {
+  list: Category[]
+}
+
+export const useCategoryStore = defineStore<string, CategoryState>('category', {
   state: () => ({
     list: [],
   }),
   getters: {
     getCategoryByCode: (state) => 
-      (code) => state.list.find(category => category.code === code),
+      (code: number) => state.list.find((category) => category.code === code),
   },
   actions: {
     async fetchAllCategory() {
       try {
-        const { data } = await useAuthClient('/categories', Method.GET);
+        const { data } = await useAuthGet<{ categories: Category[] }>('/categories');
         this.list = data.categories;
         return data.categories;
       } catch (error) {
         return handleError(error);
       }
     },
-    fetchCategoryByCode(code) {
-      return useAuthClient(`/categories/${code}`, Method.GET);
+    fetchCategoryByCode(code: number) {
+      return useAuthGet<Category>(`/categories/${code}`);
     },
-    addCategory(category) {
-      return useAuthClient('/categories', Method.POST, category);
+    addCategory(category: Category) {
+      return useAuthPost<Category, any>('/categories', category);
     },
-    updateCategory({ code, ...data }) {
-      return useAuthClient(`/categories/${code}`, Method.PATCH, data);
+    updateCategory(category: Partial<Category>) {
+      const { code, ...data } = category;
+      return useAuthPatch<Partial<Category>, any>(`/categories/${code}`, data);
     },
     deleteCategory(code) {
-      return useAuthClient(`/categories/${code}`, Method.DELETE);
+      return useAuthDelete(`/categories/${code}`);
     },
     getContentsByCategory(code) {
-      return useAuthClient(`/categories/${code}/contents`, Method.GET);
+      return useAuthGet(`/categories/${code}/contents`);
     },
     addContentByCategory(code, content) {
-      return useAuthClient(`/categories/${code}/contents`, Method.POST, content);
+      return useAuthPost(`/categories/${code}/contents`, content);
     }
   }
 });

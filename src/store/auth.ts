@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia'
-import { useClient, usePost } from '../hooks'
+import { usePost } from '../hooks/http'
 import router from '../router'
-import { Method } from '../types/enums'
 import { TOKEN } from '../common/constants'
 import type { User } from '../types/models/user'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: null
+    token: ''
   }),
   getters: {
     isAuthenticated: (state) => !!state.token,
@@ -21,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
       return data;
     },
     logout() {
-      this.token = null;
+      this.token = '';
       localStorage.removeItem(TOKEN);
       router.push('/login');
     }

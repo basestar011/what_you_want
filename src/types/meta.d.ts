@@ -4,7 +4,7 @@
 export {}
 
 import 'vue-router'
-import { Layout } from './types/enums'
+import { Layout } from './enums'
 
 declare module 'vue-router' {
   interface RouteMeta {

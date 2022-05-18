@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { Layout } from '../types/enums'
 import { useAuthStore } from '../store/auth'
-import { useAuthClient } from '../hooks'
-import { Method } from '../types/enums'
+import { useAuthGet } from '../hooks/http'
 import { TOKEN } from '../common/constants'
 
 const router = createRouter({
@@ -50,7 +49,7 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   const recode = to.matched.find(recode => recode.meta.requiresAuth);
   // 인증이 필요한 페이지
-  if(recode && recode.meta.auth) {
+  if(recode && recode.meta.requiresAuth) {
     const authStore = useAuthStore();
     // 로그인이 되어 있는 상태
     if(authStore.isAuthenticated) {
@@ -60,8 +59,8 @@ router.beforeEach(async (to, from) => {
       if(token) {
         authStore.token = token;
         try {
-          const response = await useAuthClient('/auth', Method.GET);
-          authStore.token = response.data;
+          const { data } = await useAuthGet<string>('/auth');
+          authStore.token = data;
           return true;
         } catch (error) {
           alert('로그인이 필요합니다.');
