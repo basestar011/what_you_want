@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { LAYOUT } from '@/common/constants'
+import { Layout } from '../types/enums'
 import { useAuthStore } from '../store/auth'
 import { useAuthClient } from '../hooks'
+import { Method } from '../types/enums'
+import { TOKEN } from '../common/constants'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,22 +15,22 @@ const router = createRouter({
     {
       path: '/login',
       meta: {
-        layout: LAYOUT.guest
+        layout: Layout.GUEST
       },
       component: () => import('@/views/HomePage.vue')
     },
     {
       path: '/quiz',
       meta: {
-        layout: LAYOUT.guest
+        layout: Layout.GUEST
       },
       component: () => import('@/views/QuizPage.vue')
     },
     {
       path: '/content',
       meta: {
-        layout: LAYOUT.default,
-        auth: true,
+        layout: Layout.DEFAULT,
+        requiresAuth: true,
       },
       component: () => import('@/views/ContentPage.vue'),
       children: [
@@ -46,7 +48,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  const recode = to.matched.find(recode => recode.meta.auth);
+  const recode = to.matched.find(recode => recode.meta.requiresAuth);
   // 인증이 필요한 페이지
   if(recode && recode.meta.auth) {
     const authStore = useAuthStore();
@@ -54,16 +56,16 @@ router.beforeEach(async (to, from) => {
     if(authStore.isAuthenticated) {
       return true;
     } else { // 로그인이 되어 있지 않음
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem(TOKEN);
       if(token) {
         authStore.token = token;
         try {
-          const { data } = await useAuthClient('/auth', 'GET');
-          authStore.token = data;
+          const response = await useAuthClient('/auth', Method.GET);
+          authStore.token = response.data;
           return true;
         } catch (error) {
           alert('로그인이 필요합니다.');
-          localStorage.removeItem('token');
+          localStorage.removeItem(TOKEN);
           return '/login';
         }
       } else {
