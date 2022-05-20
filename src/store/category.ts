@@ -1,18 +1,19 @@
 import { defineStore } from 'pinia'
 import { useAuthGet, useAuthPost, useAuthPatch, useAuthDelete } from '../hooks/http'
 import { handleError } from '../utils/error'
-import { Category } from '@/types/models/category';
+import type { Category } from '@/types/models/category';
+import type { Content } from '@/types/models/content';
 
 export type CategoryState = {
   list: Category[]
 }
 
-export const useCategoryStore = defineStore<string, CategoryState>('category', {
+export const useCategoryStore = defineStore<string, CategoryState, any, any>('category', {
   state: () => ({
     list: [],
   }),
   getters: {
-    getCategoryByCode: (state) => 
+    getCategoryByCode: (state: CategoryState) => 
       (code: number) => state.list.find((category) => category.code === code),
   },
   actions: {
@@ -31,17 +32,16 @@ export const useCategoryStore = defineStore<string, CategoryState>('category', {
     addCategory(category: Category) {
       return useAuthPost<Category, any>('/categories', category);
     },
-    updateCategory(category: Partial<Category>) {
-      const { code, ...data } = category;
-      return useAuthPatch<Partial<Category>, any>(`/categories/${code}`, data);
+    updateCategory(code: string, category: Omit<Category, 'code'>) {
+      return useAuthPatch<Omit<Category, 'code'>, any>(`/categories/${code}`, category);
     },
-    deleteCategory(code) {
-      return useAuthDelete(`/categories/${code}`);
+    deleteCategory(code: string) {
+      return useAuthDelete<number>(`/categories/${code}`);
     },
-    getContentsByCategory(code) {
-      return useAuthGet(`/categories/${code}/contents`);
+    getContentsByCategory<T>(code: string) {
+      return useAuthGet<Content<T>>(`/categories/${code}/contents`);
     },
-    addContentByCategory(code, content) {
+    addContentByCategory(code: string, content) {
       return useAuthPost(`/categories/${code}/contents`, content);
     }
   }

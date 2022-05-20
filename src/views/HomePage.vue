@@ -14,6 +14,7 @@ async function login(e) {
     await useAuthStore().login(toRaw(state));
     router.push('/content');
   } catch (error) {
+    console.dir(error);
     alert(`${error.name} : ${error.message}`);
   }
 }
