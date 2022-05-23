@@ -4,10 +4,14 @@ import router from '../router'
 import { TOKEN } from '../common/constants'
 import type { User } from '../types/models/user'
 
+type AuthState = {
+  token: string
+}
+
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: ''
-  }),
+  } as AuthState),
   getters: {
     isAuthenticated: (state) => !!state.token,
     bearerToken: (state) => `Bearer ${state.token}`

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { useAuthGet, useAuthPost, useAuthPatch, useAuthDelete } from '../hooks/http'
-import { handleError } from '../utils/error'
 import type { Category } from '@/types/models/category';
 import type { Content } from '@/types/models/content';
 
@@ -8,41 +7,43 @@ export type CategoryState = {
   list: Category[]
 }
 
-export const useCategoryStore = defineStore<string, CategoryState, any, any>('category', {
+export const useCategoryStore = defineStore('category', {
   state: () => ({
     list: [],
-  }),
+  } as CategoryState),
   getters: {
-    getCategoryByCode: (state: CategoryState) => 
-      (code: number) => state.list.find((category) => category.code === code),
+    getCategoryByCode: (state) => 
+      (code: Category['code']) => state.list.find((category) => category.code === code),
   },
   actions: {
-    async fetchAllCategory() {
-      try {
-        const { data } = await useAuthGet<{ categories: Category[] }>('/categories');
-        this.list = data.categories;
-        return data.categories;
-      } catch (error) {
-        return handleError(error);
-      }
+    async fetchAllCategory(): Promise<Category[]> {
+      const { data } = await useAuthGet<Category[]>('/categories');
+      this.list = data;
+      return data;
     },
-    fetchCategoryByCode(code: number) {
-      return useAuthGet<Category>(`/categories/${code}`);
+    async fetchCategoryByCode(code: Category['code']): Promise<Category> {
+      const { data } = await useAuthGet<Category>(`/categories/${code}`);
+      return data;
     },
-    addCategory(category: Category) {
-      return useAuthPost<Category, any>('/categories', category);
+    async addCategory(category: Category): Promise<Pick<Category, 'code'>> {
+      const { data } = await useAuthPost<Category, Pick<Category, 'code'>>('/categories', category);
+      return data;
     },
-    updateCategory(code: string, category: Omit<Category, 'code'>) {
-      return useAuthPatch<Omit<Category, 'code'>, any>(`/categories/${code}`, category);
+    async updateCategory(code: Category['code'], category: Omit<Category, 'code'>): Promise<Category> {
+      const { data } = await useAuthPatch<Omit<Category, 'code'>, Category>(`/categories/${code}`, category);
+      return data;
     },
-    deleteCategory(code: string) {
-      return useAuthDelete<number>(`/categories/${code}`);
+    async deleteCategory(code: Category['code']): Promise<boolean> {
+      const { status } = await useAuthDelete<string>(`/categories/${code}`);
+      return status === 200
     },
-    getContentsByCategory<T>(code: string) {
-      return useAuthGet<Content<T>>(`/categories/${code}/contents`);
+    async getContentsByCategory<T>(code: Category['code']): Promise<Content<T>[]> {
+      const { data } = await useAuthGet<Content<T>[]>(`/categories/${code}/contents`);
+      return data;
     },
-    addContentByCategory(code: string, content) {
-      return useAuthPost(`/categories/${code}/contents`, content);
+    async addContentByCategory<T>(content: Omit<Content<T>, 'code'>): Promise<any> {
+      const { cg_code, ...args } =  content;
+      const { data } = await useAuthPost(`/categories/${cg_code}/contents`, args);
     }
   }
 });
