@@ -4,9 +4,14 @@
   }
 </script>
 
+<script setup lang="ts">
+import { ref } from 'vue'
+const title = ref(import.meta.env.WDYW_APP_TITLE);
+</script>
+
 <template>
   <header>
-    <h1><router-link to="/">What Do You Want ?</router-link></h1>
+    <h1><router-link to="/">{{ title }}</router-link></h1>
   </header>
 </template>
 

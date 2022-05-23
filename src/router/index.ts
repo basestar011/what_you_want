@@ -3,6 +3,7 @@ import { Layout } from '../types/enums'
 import { useAuthStore } from '../store/auth'
 import { useAuthGet } from '../hooks/http'
 import { TOKEN } from '../common/constants'
+import { handleError } from '@/utils/error'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -63,6 +64,8 @@ router.beforeEach(async (to, from) => {
           authStore.token = data;
           return true;
         } catch (error) {
+          const { message } = handleError(error);
+          console.error(message);
           alert('로그인이 필요합니다.');
           localStorage.removeItem(TOKEN);
           return '/login';

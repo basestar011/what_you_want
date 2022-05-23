@@ -9,7 +9,7 @@ const state = reactive({
 
 const router = useRouter();
 
-async function login(e) {
+async function login(e: SubmitEvent) {
   try {
     await useAuthStore().login(toRaw(state));
     router.push('/content');
