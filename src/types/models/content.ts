@@ -7,8 +7,8 @@ export interface Content<T> {
   cg_code: Category['code']
 }
 
-export interface Restaurant {
+export interface Space {
   address?: string
   description?: string
-  menu?: string[]
+  isWent: boolean
 }
