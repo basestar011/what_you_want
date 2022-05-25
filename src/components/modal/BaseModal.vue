@@ -9,6 +9,9 @@ export default {
 </script>
 
 <template>
+<!--
+  모달 구현 테스트중...
+-->
   <transition name="modal" appear>
     <section class="modal">
       <div class="modal__window">

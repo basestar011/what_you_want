@@ -5,20 +5,21 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 
-const state = reactive({
+const detail = reactive({
   address: '',
-  description: ''
+  description: '',
+  isWent: false
 });
 
-defineExpose(toRefs(state));
+defineExpose({ detail });
 </script>
 
 <template>
   <div>
-    address: <input type="text" v-model="state.address">
-    description: <textarea v-model="state.description"></textarea>
+    address: <input type="text" v-model="detail.address">
+    description: <textarea v-model="detail.description"></textarea>
   </div>
 </template>
 

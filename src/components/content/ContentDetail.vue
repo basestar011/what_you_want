@@ -1,6 +1,6 @@
 <script lang="ts">
 export default {
-  name: 'Content Detail'
+  name: 'ContentDetail'
 }
 </script>
 

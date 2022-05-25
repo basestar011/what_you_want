@@ -41,11 +41,11 @@ export const useCategoryStore = defineStore('category', {
       const { data } = await useAuthGet<Content<T>[]>(`/categories/${code}/contents`);
       return data;
     },
-    async addContentByCategory<T>(content: Omit<Content<T>, 'code'>): Promise<Pick<Content<T>, 'code'>> {
+    async addContentByCategory<T>(content: Pick<Content<T>, 'title' | 'detail' | 'cg_code'>): Promise<Pick<Content<T>, 'code'>> {
       const { cg_code, title, detail } =  content;
       console.log(cg_code, title, detail);
       const { data } = 
-        await useAuthPost<Omit<Content<T>, 'code' | 'cg_code'>, Pick<Content<T>, 'code'>>(
+        await useAuthPost<Pick<Content<T>, 'title'|'detail' >, Pick<Content<T>, 'code'>>(
           `/categories/${cg_code}/contents`,
           { title, detail }
         );

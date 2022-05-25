@@ -1,35 +1,37 @@
 <script lang="ts">
 export default {
-  name: 'Content Create'
+  name: 'ContentCreate'
 }
 </script>
 
 <script setup lang="ts">
 import { useCategoryStore } from '@/store/category'
+import { useContentStore } from '@/store/content'
 import { reactive, ref, toRaw } from 'vue';
 import ContentBasicForm from './form/ContentBasicForm.vue';
 import ContentDetailForm from './form/ContentDetailForm.vue';
-import { Space, Content } from '@/types/models/content'
+import { Content } from '@/types/models/content'
 import { handleError } from '@/utils/error';
 import { useRouter } from 'vue-router';
-import { getHeapSpaceStatistics } from 'v8';
 
-const form = reactive<Omit<Content<any>, 'code'>>({
+type DetailFormType = InstanceType<typeof ContentDetailForm>;
+
+const form = reactive<Pick<Content<any>, 'title' | 'detail' | 'cg_code'>>({
   title: '',
   detail: {},
   cg_code: 0
 })
 
 const type = ref('space');
-const detailForm = ref(null);
+const detailForm = ref<DetailFormType>(null);
 
 const categoryStore = useCategoryStore();
+const contentStore = useContentStore();
 const router = useRouter();
 
 const createContent = async (e: SubmitEvent) => {
-  const detailComp = detailForm.value;
-  if(type.value === 'space') {
-  }
+  form.detail = detailForm.value?.getFormDetail();
+  console.log('create', toRaw(form));
   /*
   const formdata = toRaw(form);
   try {
@@ -57,8 +59,7 @@ const createContent = async (e: SubmitEvent) => {
         >{{ category.name }}</option>
       </select>
       <select v-model="type">
-        <option value="space">장소</option>
-        <option value="test">테스트</option>
+        <option value="space" selected>장소</option>
       </select>
       <ContentBasicForm v-model:title="form.title" />
       <ContentDetailForm :type="type" ref="detailForm"/>

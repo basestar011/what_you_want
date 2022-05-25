@@ -32,6 +32,11 @@ const addCategory = (e) => {
 </script>
 
 <template>
+<!--
+  카테고리 추가 컴포넌트
+  - 메인 카테고리와 서브 카테고리 각각 추가할 수 있도록
+  - 모달로 추가할 지 따로 추가 페이지에서 추가할 지 생각중
+-->
   <div>
     <form @submit.prevent="addCategory">
       <input type="text" v-model="state.name" />
