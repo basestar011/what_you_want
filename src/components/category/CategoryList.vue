@@ -5,14 +5,23 @@ export default {
 </script>
 
 <script setup lang="ts">
-import Category from './Category.vue';
+import type { Category } from '@/types/models/category'
+import CategoryComp from './Category.vue';
+import { useCategoryStore } from '@/store/category'
+import { computed } from 'vue'
 
-const props = defineProps({
-  categories: {
-    type: Array,
-    default: () => ([])
-  }
-})
+const props = defineProps<{
+  categories: Category[]
+}>()
+
+const categoryStore = useCategoryStore();
+const allCategory = computed(() => {
+  return categoryStore.selected === undefined || categoryStore.selected === null
+});
+
+function isSelected(category: Category): boolean {
+  return categoryStore.selected ? categoryStore.selected.code === category.code : false;
+}
 </script>
 
 <template>
@@ -23,12 +32,23 @@ const props = defineProps({
   - 서브 카테고리 추가 예정
 -->
 <ul>
+  <li @click="categoryStore.selected = null" :class="{ all: allCategory }">전체</li>
   <li v-for="category in props.categories">
-    <Category :category="category" />
+    <CategoryComp :category="category" :selected="isSelected(category)" @category:select="categoryStore.selected = $event"/>
   </li>
 </ul>
 </template>
 
 <style scoped>
+ul {
+  list-style: square;
+}
+ul li {
+  font-size: 1.5em;
+  cursor: pointer;
+}
 
+.all {
+  font-weight: 700;
+}
 </style>

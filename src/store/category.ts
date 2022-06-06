@@ -4,12 +4,14 @@ import type { Category } from '@/types/models/category';
 import type { Content } from '@/types/models/content';
 
 export type CategoryState = {
-  list: Category[]
+  list: Category[],
+  selected: Category
 }
 
 export const useCategoryStore = defineStore('category', {
   state: () => ({
     list: [],
+    selected: null
   } as CategoryState),
   getters: {
     getCategoryByCode: (state) => 

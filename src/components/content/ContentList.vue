@@ -6,15 +6,17 @@ export default {
 
 <script setup lang="ts">
 import ContentDetail from './ContentDetail.vue';
+import { useContentStore } from '@/store/content'
+
+const contentStore = useContentStore();
 </script>
 
 <template>
-  <div>
-    <h1>Content List</h1>
-    <div>
-      <ContentDetail />
-    </div>
-  </div>
+  <ul>
+    <li v-for="content in contentStore.listBySelectedCategory">
+      <ContentDetail :content="content" />
+    </li>
+  </ul>
 </template>
 
 <style scoped>
