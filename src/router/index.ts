@@ -41,6 +41,10 @@ const router = createRouter({
         {
           path: 'create',
           component: () => import('@/components/content/ContentCreate.vue')
+        },
+        {
+          path: ':code',
+          component: () => import('@/components/content/ContentDetail.vue')
         }
       ]
     }

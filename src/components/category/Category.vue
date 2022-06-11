@@ -26,5 +26,6 @@ const contentStore = useContentStore();
 <style scoped>
 .selected {
   font-weight: 700;
+  color: red;
 }
 </style>

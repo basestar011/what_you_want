@@ -17,6 +17,10 @@ const categoryStore = useCategoryStore();
 const contentStore = useContentStore();
 
 const categoryAdd = ref(null);
+const categoryName = computed(() => (categoryStore.selected?.name) ?? '전체');
+const categoryDesc = computed(() => {
+  return categoryStore.selected?.description ?? ''
+});
 
 const addCategory = async (category: Category) => {
   try {
@@ -53,8 +57,9 @@ onBeforeMount(async () => {
       <!-- <CategoryAdd @category:add="addCategory" ref="categoryAdd"/> -->
     </nav>
     <section>
-      <h2 v-if="categoryStore.selected" class="section-category">
-        {{ categoryStore.selected.name }}
+      <h2 class="section-category">
+        <span class="category-name">{{ categoryName }}</span>
+        <span class="category-desc">{{ categoryDesc }}</span>
       </h2>
       <div>
         <router-view></router-view>
@@ -79,5 +84,12 @@ section {
   margin: 0 0 20px 0;
   border-bottom: 2px solid lightslategrey;
   font-size: 3rem;
+  display: flex;
+  flex-direction: column;
+  line-height: 1em;
+}
+.category-desc {
+  color: grey;
+  font-size: 1.5rem;
 }
 </style>
