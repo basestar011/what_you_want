@@ -32,8 +32,11 @@ p, ul {
   font-size: 30px;
   margin: 10px 0;
 }
-
 ul {
   list-style: none;
+}
+a {
+  text-decoration: none;
+  color: black;
 }
 </style>

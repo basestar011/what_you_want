@@ -20,7 +20,8 @@ export const useContentStore = defineStore('content', {
     },
     countByCategory: (state) => (categoryCode: Category['code']) => {
       return state.list.filter(content => content.cg_code === categoryCode).length;
-    }
+    },
+    contentDetail: (state) => (code: Content<any>['code']) => state.list.find(content => content.code === code)
   },
   actions: {
     async fetchAllContents() {
