@@ -12,5 +12,6 @@ export interface Content<T> {
 export interface Space {
   address?: string
   description?: string
+  photos?: File[]
   isWent: boolean
 }

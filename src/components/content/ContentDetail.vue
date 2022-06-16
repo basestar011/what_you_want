@@ -11,17 +11,17 @@ import { useRoute, useRouter } from 'vue-router'
 import { useContentStore } from '@/store/content'
 import { formatDate } from '@/utils/formatDate'
 
-const $route = useRoute();
-const $router = useRouter();
+const route = useRoute();
+const router = useRouter();
 const contentStore = useContentStore();
 const content = ref<Content<any>>(null);
 
 onBeforeMount(() => {
-  const { code } = $route.params;
+  const { code } = route.params;
   const codeNum = Number(code);
   if(isNaN(codeNum)) {
     alert('잘못된 접근입니다.');
-    $router.push('/content');
+    router.push('/content');
   }
   
   content.value = contentStore.contentDetail(codeNum);

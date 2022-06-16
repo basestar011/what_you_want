@@ -5,9 +5,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import ContentDetail from './ContentDetail.vue';
 import { useContentStore } from '@/store/content'
-import { formatDate } from '@/utils/formatDate'
 
 const contentStore = useContentStore();
 </script>
@@ -19,8 +17,7 @@ const contentStore = useContentStore();
   <ul v-else>
     <li v-for="content in contentStore.listBySelectedCategory">
       <router-link :to="`/content/${content.code}`">
-        {{ content.code }} {{ content.title }} {{ formatDate(content.modified) }}
-      <!-- <ContentDetail :content="content" /> -->
+        {{ content.code }} | {{ content.title }}
       </router-link>
     </li>
   </ul>

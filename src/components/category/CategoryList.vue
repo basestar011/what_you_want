@@ -11,13 +11,13 @@ import { useCategoryStore } from '@/store/category'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-const $router = useRouter();
+const router = useRouter();
+const categoryStore = useCategoryStore();
 
 const props = defineProps<{
   categories: Category[]
 }>()
 
-const categoryStore = useCategoryStore();
 const allCategory = computed(() => {
   return categoryStore.selected === undefined || categoryStore.selected === null
 });
@@ -28,7 +28,7 @@ function isSelected(category: Category): boolean {
 
 function selectCategory($event: Category): void {
   categoryStore.selected = $event;
-  $router.push('/content');
+  router.push('/content');
 }
 </script>
 
