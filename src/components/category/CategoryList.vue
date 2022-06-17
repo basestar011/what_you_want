@@ -40,7 +40,7 @@ function selectCategory($event: Category): void {
   - 서브 카테고리 추가 예정
 -->
 <ul>
-  <li @click="categoryStore.selected = null" :class="{ all: allCategory }">전체</li>
+  <li @click="selectCategory(null)" :class="{ all: allCategory }">전체</li>
   <li v-for="category in props.categories">
     <CategoryComp :category="category" :selected="isSelected(category)" @category:select="selectCategory"/>
   </li>

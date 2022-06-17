@@ -57,8 +57,8 @@ onBeforeMount(async () => {
       <!-- <CategoryAdd @category:add="addCategory" ref="categoryAdd"/> -->
     </nav>
     <section>
-      <h2 class="section-category">
-        <span class="category-name">{{ categoryName }}</span>
+      <h2 v-if="$route.path.lastIndexOf('/create') === -1" class="section-category">
+        <p class="category-name">{{ categoryName }} <router-link to="/content/create" class="create-text">컨텐츠 등록</router-link></p>
         <span class="category-desc">{{ categoryDesc }}</span>
       </h2>
       <div>
@@ -73,13 +73,11 @@ nav {
   display: inline-flex;
   width: 20%;
 }
-
 section {
   display: inline-flex;
   flex-direction: column;
   width: 80%;
 }
-
 .section-category {
   margin: 0 0 20px 0;
   border-bottom: 2px solid lightslategrey;
@@ -88,7 +86,17 @@ section {
   flex-direction: column;
   line-height: 1em;
 }
-.category-desc {
+.section-category .category-name {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+}
+.section-category .category-name .create-text {
+  text-decoration: none;
+  color: black;
+  font-size: 0.5em;
+}
+.section-category .category-desc {
   color: grey;
   font-size: 1.5rem;
 }

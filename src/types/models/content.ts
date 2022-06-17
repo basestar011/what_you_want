@@ -5,6 +5,7 @@ export interface Content<T> {
   title: string
   cg_code: Category['code']
   detail: T
+  photos?: File[]
   created: Date
   modified: Date
 }
@@ -12,6 +13,5 @@ export interface Content<T> {
 export interface Space {
   address?: string
   description?: string
-  photos?: File[]
   isWent: boolean
 }
