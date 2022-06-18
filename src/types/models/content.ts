@@ -1,11 +1,13 @@
 import type { Category } from './category'
+import type { Media } from './media'
 
 export interface Content<T> {
   code: number
   title: string
   cg_code: Category['code']
   detail: T
-  photos?: File[]
+  date?: Date, 
+  images?: Media[]
   created: Date
   modified: Date
 }

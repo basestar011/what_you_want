@@ -43,11 +43,11 @@ export const useCategoryStore = defineStore('category', {
       const { data } = await useAuthGet<Content<T>[]>(`/categories/${code}/contents`);
       return data;
     },
-    async addContentByCategory<T>(form: FormData): Promise<Pick<Content<T>, 'code'>> {
+    async addContentByCategory<T>(content: Partial<Content<any>>): Promise<Pick<Content<T>, 'code'>> {
       const { data } = 
-        await useAuthPost<FormData, Pick<Content<T>, 'code'>>(
-          `/categories/${form.get('cg_code')}/contents`,
-          form
+        await useAuthPost<Partial<Content<any>>, Pick<Content<T>, 'code'>>(
+          `/categories/${content.cg_code}/contents`,
+          content
         );
       return data
     }
