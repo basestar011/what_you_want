@@ -13,7 +13,7 @@ import { Content, Space } from '@/types/models/content'
 import { handleError } from '@/utils/error';
 import { useRouter } from 'vue-router';
 import type { Media } from '@/types/models/media'
-import { useAuthPost } from '@/hooks/http'
+import { useAuthDelete, useAuthPost } from '@/hooks/http'
 
 // detail form Info
 type DetailFormType = InstanceType<typeof ContentDetailForm>;
@@ -29,7 +29,6 @@ const state = reactive<Partial<Content<any>>>({
 })
 
 const imageInput = ref<HTMLInputElement>(null);
-
 
 const categoryStore = useCategoryStore();
 const contentStore = useContentStore();
@@ -64,12 +63,10 @@ async function submitContent(e: SubmitEvent) {
     alert(message);
   }
 }
-function checkBasicForm() {
-
-}
 
 async function uploadImages(event: Event): Promise<void> {
-  const images = (event.target as HTMLInputElement).files;
+  const input = event.target as HTMLInputElement;
+  const images = input.files;
 
   // 1. upload하려는 파일 체크
   if(!checkImages(images)) {
@@ -90,13 +87,37 @@ async function uploadImages(event: Event): Promise<void> {
   } catch (error) {
     const { message } = handleError(error);
     alert(message ?? error.message);
+  } finally {
+    // 5. input file 초기화
+    // IE를 제외한 브라우저에서 input file value 초기화 시키는 방법
+    // value를 '' 로 초기화 시 input.files 도 초기화 된다.
+    // TODO: IE 초기화는 나중에 필요할 때 추가
+    input.value = '';
   }
-
 }
 
 // 첨부 이미지 파일 타입이 image/* 인지 체크
 function checkImages(images: FileList): boolean {
   return Array.from(images).every(file => file.type.match("image/"));
+}
+
+// 첨부 이미지 삭제
+async function removeImage(index: number, image: Media) {
+  if(confirm('이 이미지를 삭제하시겠습니까?')) {
+    try {
+      // path가 포함된 id인 경우 http요청 시 /가 http 요청 경로로 인식되어 encoding 해야함.
+      const imageId = image.path ? encodeURIComponent(`${image.path}/${image.id}`) : image.id
+      const { status } = await useAuthDelete<any>(`/external/images/${imageId}`);
+      if(status !== 204) {
+        alert('이미지 삭제 중 에러가 발생했습니다.');
+      } else {
+        state.images.splice(index, 1);
+      }
+    } catch (error) {
+      console.log(error);
+      alert('이미지 삭제 중 에러가 발생했습니다.');
+    }
+  }
 }
 </script>
 
@@ -139,13 +160,16 @@ function checkImages(images: FileList): boolean {
         <input type="file" class="form_file" ref="imageInput" @change="uploadImages" multiple accept="image/*" />
       </div>
       <div v-if="state.images.length > 0" class="form_line">
-        <div v-for="image in state.images" class="image_wrapper">
+        <div v-for="(image, i) in state.images" class="image_wrapper">
           <img :src="image.srclink" :alt="image.name" class="preview_image">
-          <button type="button" @click="" class="removeBtn">X</button>
+          <button type="button" @click="removeImage(i, image)" class="removeBtn">X</button>
         </div>
       </div>
       <ContentDetailForm :type="detailType" ref="detailForm"/>
-      <button type="submit">생성</button>
+      <div class="form_btn">
+        <button type="submit">등록</button>
+        <button type="button" @click="$router.push('/content')">이전</button>
+      </div>
     </form>
   </div>
 </template>
@@ -217,5 +241,13 @@ function checkImages(images: FileList): boolean {
 }
 .form_file {
   display: none;
+}
+.form_btn {
+  margin-top: 2em;
+}
+.form_btn button {
+  font-size: 0.8em;
+  width: 2.5em;
+  margin-right: 0.5em;
 }
 </style>

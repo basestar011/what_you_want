@@ -12,15 +12,18 @@ import CategoryList from '@/components/category/CategoryList.vue';
 import CategoryAdd from '@/components/category/CategoryAdd.vue';
 import { handleError } from '@/utils/error';
 import type { Category } from '@/types/models/category';
+import { useRoute } from 'vue-router'
 
 const categoryStore = useCategoryStore();
 const contentStore = useContentStore();
+const $route = useRoute();
 
 const categoryAdd = ref(null);
 const categoryName = computed(() => (categoryStore.selected?.name) ?? '전체');
 const categoryDesc = computed(() => {
   return categoryStore.selected?.description ?? ''
 });
+const isNotCreatePage = computed(() => $route.path.lastIndexOf('/create') === -1);
 
 const addCategory = async (category: Category) => {
   try {
@@ -52,12 +55,12 @@ onBeforeMount(async () => {
     <header>
       <h1>콘텐츠 페이지</h1>
     </header>
-    <nav>
+    <nav v-if="isNotCreatePage">
       <CategoryList :categories="categoryStore.list" />
       <!-- <CategoryAdd @category:add="addCategory" ref="categoryAdd"/> -->
     </nav>
     <section>
-      <h2 v-if="$route.path.lastIndexOf('/create') === -1" class="section-category">
+      <h2 v-if="isNotCreatePage" class="section-category">
         <p class="category-name">{{ categoryName }} <router-link to="/content/create" class="create-text">컨텐츠 등록</router-link></p>
         <span class="category-desc">{{ categoryDesc }}</span>
       </h2>
