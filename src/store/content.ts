@@ -2,15 +2,17 @@ import { defineStore } from 'pinia'
 import type { Content } from '../types/models/content'
 import type { Category } from '../types/models/category'
 import { useCategoryStore } from './category'
-import { useAuthGet } from '../hooks/http'
+import { useAuthGet, useAuthPost } from '../hooks/http'
 
 type ContentState = {
-  list: Content<any>[]
+  list: Content<any>[],
+  current: Content<any>
 }
 
 export const useContentStore = defineStore('content', {
   state: () => ({
-    list: []
+    list: [],
+    current: null
   } as ContentState),
   getters: {
     listBySelectedCategory: (state) => {
@@ -24,9 +26,18 @@ export const useContentStore = defineStore('content', {
     contentDetail: (state) => (code: Content<any>['code']) => state.list.find(content => content.code === code)
   },
   actions: {
-    async fetchAllContents() {
+    async fetchAllContents(): Promise<Content<any>[]> {
       const { data } = await useAuthGet<Content<any>[]>('/contents');
       this.list = data;
+      return data;
+    },
+    async addContent<T>(content: Partial<Content<T>>): Promise<Content<T>> {
+      console.log('content!!', content);
+      /*
+      const { data } = await useAuthPost<Partial<Content<T>>, Content<T>>('/contents', content);
+      this.current = data;
+      */
+      return null;
     }
   }
 });

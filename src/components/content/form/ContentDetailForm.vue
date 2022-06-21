@@ -29,6 +29,8 @@ onBeforeMount(async () => {
 
 // type에 따른 form component load method
 const loadContentForm = async (type: string) => {
+  if(!type) return null;
+  
   const formDetail = type.charAt(0).toUpperCase() + type.slice(1);
   return await defineAsyncComponent(() => import(`./Content${formDetail}Form.vue`))
 }

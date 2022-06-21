@@ -9,7 +9,7 @@ import { useCategoryStore } from '@/store/category'
 import { useContentStore } from '@/store/content'
 import { reactive, ref, toRaw } from 'vue';
 import ContentDetailForm from './form/ContentDetailForm.vue';
-import { Content, Space } from '@/types/models/content'
+import { Content, Space, DetailType } from '@/types/models/content'
 import { handleError } from '@/utils/error';
 import { useRouter } from 'vue-router';
 import type { Media } from '@/types/models/media'
@@ -17,7 +17,8 @@ import { useAuthDelete, useAuthPost } from '@/hooks/http'
 
 // detail form Info
 type DetailFormType = InstanceType<typeof ContentDetailForm>;
-const detailType = ref<string>('space');
+type detailLiteralType = '' | 'space';
+const detailType = ref<detailLiteralType>('space');
 const detailForm = ref<DetailFormType>(null);
 
 const state = reactive<Partial<Content<any>>>({
@@ -50,7 +51,7 @@ async function submitContent(e: SubmitEvent) {
   
   try {
     // 3) add contents
-    const data = await categoryStore.addContentByCategory<Space>(toRaw(state));
+    const data = await contentStore.addContent<DetailType<typeof detailType.value>>(toRaw(state));
     Array.prototype.forEach.call(data, file => {
       console.log(`filename: ${file.filename}, size: ${file.filesize}, key: ${file.key}`);
     });
@@ -61,6 +62,15 @@ async function submitContent(e: SubmitEvent) {
   } catch (error) {
     const { message } = handleError(error);
     alert(message);
+  }
+}
+
+async function addContent(detailType: detailLiteralType): Promise<any> {
+  switch (detailType) {
+    case 'space':
+      return await contentStore.addContent<Space>(toRaw(state));
+    case '':
+      return await contentStore.addContent<{}>(toRaw(state));
   }
 }
 
@@ -143,6 +153,7 @@ async function removeImage(index: number, image: Media) {
         <select class="form_select" v-model="detailType">
           <option value="">일반</option>
           <option value="space" selected>장소</option>
+          <option value="wish" selected>소원</option>
         </select>
       </div>
       <div class="form_line">

@@ -17,3 +17,17 @@ export interface Space {
   description?: string
   isWent: boolean
 }
+
+/**
+ * 테스트용 타입 추가
+ */
+export interface Wish {
+  wishdate: Date
+  description: string
+  done: boolean
+}
+
+export interface DetailType<T> {
+  name: T
+  type: T extends 'space' ? Space : T extends 'wish' ? Wish : {}
+}

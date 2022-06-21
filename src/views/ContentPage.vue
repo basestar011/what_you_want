@@ -10,6 +10,7 @@ import { useContentStore } from '@/store/content'
 import { onBeforeMount, ref, computed } from 'vue';
 import CategoryList from '@/components/category/CategoryList.vue';
 import CategoryAdd from '@/components/category/CategoryAdd.vue';
+import ContentHeader from '@/components/content/ContentHeader.vue';
 import { handleError } from '@/utils/error';
 import type { Category } from '@/types/models/category';
 import { useRoute } from 'vue-router'
@@ -19,10 +20,6 @@ const contentStore = useContentStore();
 const $route = useRoute();
 
 const categoryAdd = ref(null);
-const categoryName = computed(() => (categoryStore.selected?.name) ?? '전체');
-const categoryDesc = computed(() => {
-  return categoryStore.selected?.description ?? ''
-});
 const isNotCreatePage = computed(() => $route.path.lastIndexOf('/create') === -1);
 
 const addCategory = async (category: Category) => {
@@ -52,35 +49,38 @@ onBeforeMount(async () => {
 
 <template>
   <article>
-    <header>
-      <h1>콘텐츠 페이지</h1>
-    </header>
-    <nav v-if="isNotCreatePage">
+    <nav v-if="isNotCreatePage" class="nav">
       <CategoryList :categories="categoryStore.list" />
       <!-- <CategoryAdd @category:add="addCategory" ref="categoryAdd"/> -->
     </nav>
-    <section>
-      <h2 v-if="isNotCreatePage" class="section-category">
-        <p class="category-name">{{ categoryName }} <router-link to="/content/create" class="create-text">컨텐츠 등록</router-link></p>
-        <span class="category-desc">{{ categoryDesc }}</span>
-      </h2>
-      <div>
-        <router-view></router-view>
-      </div>
+    <ContentHeader class="header"/>
+    <section class="section">
+      <router-view></router-view>
     </section>
   </article>
 </template>
 
 <style scoped>
-nav {
-  display: inline-flex;
-  width: 20%;
+article {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: minmax(50px, 100px) auto;
 }
+
+.nav {
+  grid-column: 1 / 2;
+  grid-row: 1;
+}
+.header {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
 section {
-  display: inline-flex;
-  flex-direction: column;
-  width: 80%;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
 }
+
 .section-category {
   margin: 0 0 20px 0;
   border-bottom: 2px solid lightslategrey;
@@ -89,16 +89,19 @@ section {
   flex-direction: column;
   line-height: 1em;
 }
+
 .section-category .category-name {
   display: flex;
   justify-content: space-between;
   margin: 0;
 }
+
 .section-category .category-name .create-text {
   text-decoration: none;
   color: black;
   font-size: 0.5em;
 }
+
 .section-category .category-desc {
   color: grey;
   font-size: 1.5rem;
