@@ -18,7 +18,7 @@ import { useAuthDelete, useAuthPost } from '@/hooks/http'
 // detail form Info
 type DetailFormType = InstanceType<typeof ContentDetailForm>;
 type detailLiteralType = '' | 'space';
-const detailType = ref<detailLiteralType>('space');
+const detailType = ref<detailLiteralType>('');
 const detailForm = ref<DetailFormType>(null);
 
 const state = reactive<Partial<Content<any>>>({
@@ -41,36 +41,37 @@ function addNewCategory(event: Event) {
 }
 // 새 컨텐츠 생성 
 async function submitContent(e: SubmitEvent) {
-  // TODO: content validation 추가
-  // 1) form validation
-  // 1-1. basic form validate
-  // 1-2. detail form validate
-
-  // 2) set detail form data
+  // 1) set detail form data
   state.detail = detailForm.value?.getFormDetail() ?? {};
+
+  // TODO: content validation 추가
+  // 2) form validation
+  // 2-1. basic form validate
+  if(state.cg_code === 0) {
+    alert('카테고리를 선택하세요');
+    return;
+  }
+  if(state.title.trim() === '' || state.title.trim().length < 2) {
+    alert('컨텐츠 제목을 두 글자 이상 입력하세요.');
+    return;
+  }
+
+  // 2-2. detail form validate
+  if(detailForm.value?.validateFn) {
+    const error = detailForm.value.validateFn();
+    if(error) { alert(error); return; }
+  }
   
   try {
     // 3) add contents
-    const data = await contentStore.addContent<DetailType<typeof detailType.value>>(toRaw(state));
-    Array.prototype.forEach.call(data, file => {
-      console.log(`filename: ${file.filename}, size: ${file.filesize}, key: ${file.key}`);
-    });
-    alert('완료~');
+    const { code } = await contentStore.addContent<DetailType<typeof detailType.value>>(toRaw(state));
+    alert('등록 완료.');
 
     // 4) move contents page
-    router.push('/content')
+    router.push(`/content/${code}`);
   } catch (error) {
     const { message } = handleError(error);
     alert(message);
-  }
-}
-
-async function addContent(detailType: detailLiteralType): Promise<any> {
-  switch (detailType) {
-    case 'space':
-      return await contentStore.addContent<Space>(toRaw(state));
-    case '':
-      return await contentStore.addContent<{}>(toRaw(state));
   }
 }
 

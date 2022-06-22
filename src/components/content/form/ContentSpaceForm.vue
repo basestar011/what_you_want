@@ -5,7 +5,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import type { Space } from '@/types/models/content'
+import type { Space, ContentValidate } from '@/types/models/content'
 import { reactive } from 'vue'
 
 const detail: Space = reactive({
@@ -14,7 +14,15 @@ const detail: Space = reactive({
   isWent: false
 });
 
-defineExpose({ detail });
+const validate: ContentValidate = (): string => {
+  // validate 필요?
+  console.log(detail.address);
+  console.log(detail.description);
+  console.log(detail.isWent);
+  return null;
+}
+
+defineExpose({ detail, validate });
 </script>
 
 <template>

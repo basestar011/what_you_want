@@ -22,12 +22,20 @@ export interface Space {
  * 테스트용 타입 추가
  */
 export interface Wish {
-  wishdate: Date
-  description: string
+  wishdate?: Date
+  description?: string
   done: boolean
 }
 
 export interface DetailType<T> {
   name: T
   type: T extends 'space' ? Space : T extends 'wish' ? Wish : {}
+}
+
+/**
+ * 각 detail form별 validate 할 수 있는 validate 함수 인터페이스
+ * 걸린 경우 alert로 노출할 수 있는 message(string) 반환
+ */
+export interface ContentValidate {
+  (): string
 }

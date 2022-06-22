@@ -5,11 +5,12 @@ export default {
 </script>
 
 <script setup lang="ts">
-import ContentSpaceForm from './ContentSpaceForm.vue'
+import type ContentSpaceForm from './ContentSpaceForm.vue'
+import type ContentWishForm from './ContentWishForm.vue'
+import type { ContentValidate } from '@/types/models/content'
 import { watch, ref, shallowRef, defineAsyncComponent, onBeforeMount } from 'vue'
-import { useContentStore } from '@/store/content'
 
-type FormComponentType = InstanceType<typeof ContentSpaceForm>;
+type FormComponentType = InstanceType<typeof ContentSpaceForm | typeof ContentWishForm>;
 
 // expose된 값을 가져오기 위한 Component ref
 const formComponent = ref<FormComponentType>(null);
@@ -36,8 +37,16 @@ const loadContentForm = async (type: string) => {
 }
 // 부모 컴포넌트가 detail data 받는 method
 const getFormDetail = () => formComponent.value?.detail ?? null;
+// detail data validation function
+const validateFn = () => {
+  return formComponent.value?.validate ? formComponent.value?.validate() : emptyFn();
+}
 
-defineExpose({ getFormDetail });
+const emptyFn: ContentValidate = (): string => {
+  return null;
+}
+
+defineExpose({ getFormDetail, validateFn });
 </script>
 
 <template>

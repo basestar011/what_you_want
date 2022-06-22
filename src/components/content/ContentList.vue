@@ -14,13 +14,18 @@ const contentStore = useContentStore();
   <p v-if="contentStore.listBySelectedCategory.length === 0">
     등록된 컨텐츠가 없습니다.
   </p>
-  <ul v-else>
-    <li v-for="content in contentStore.listBySelectedCategory">
-      <router-link :to="`/content/${content.code}`">
-        {{ content.code }} | {{ content.title }}
-      </router-link>
-    </li>
-  </ul>
+  <div v-else class="container">
+    <div class="content_btn">
+      <router-link to="/content/create" class="create-text">컨텐츠 등록</router-link>
+    </div>
+    <ul class="content_list">
+      <li v-for="content in contentStore.listBySelectedCategory">
+        <router-link :to="`/content/${content.code}`">
+          {{ content.code }} | {{ content.title }}
+        </router-link>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
@@ -35,5 +40,8 @@ ul {
 a {
   text-decoration: none;
   color: black;
+}
+a:hover {
+  color: red;
 }
 </style>

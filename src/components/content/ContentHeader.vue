@@ -21,14 +21,14 @@ const categoryName = computed<string>(() => (categoryStore.selected?.name) ?? '�
 const categoryDesc = computed<string>(() => categoryStore.selected?.description ?? '');
 
 const contentStore = useContentStore();
-const contentTitle = computed(() => contentStore.current?.title ?? '');
+const contentTitle = computed(() => contentStore.selected?.title ?? '');
 </script>
 
 <template>
   <div class="container">
     <template v-if="isContentListPage"><!-- 컨텐츠 리스트 페이지 -->
       <h2 class="section-category">
-        <p class="category-name">{{ categoryName }} <router-link to="/content/create" class="create-text">컨텐츠 등록</router-link></p>
+        <p class="category-name">{{ categoryName }}</p>
         <span class="category-desc">{{ categoryDesc }}dsfsdfsdfsdfsdf</span>
       </h2>
     </template>
@@ -43,7 +43,8 @@ const contentTitle = computed(() => contentStore.current?.title ?? '');
 
 <style scoped>
 .container {
-  border-bottom: 2px solid lightslategrey;
+  border-bottom: 1px solid lightslategrey;
+  padding: 0 1em;
 }
 .section-category {
   margin: 0

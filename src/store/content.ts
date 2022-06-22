@@ -6,13 +6,15 @@ import { useAuthGet, useAuthPost } from '../hooks/http'
 
 type ContentState = {
   list: Content<any>[],
-  current: Content<any>
+  selected: Content<any>,
+  isNavShow: boolean
 }
 
 export const useContentStore = defineStore('content', {
   state: () => ({
     list: [],
-    current: null
+    selected: null,
+    isNavShow: true
   } as ContentState),
   getters: {
     listBySelectedCategory: (state) => {
@@ -32,12 +34,9 @@ export const useContentStore = defineStore('content', {
       return data;
     },
     async addContent<T>(content: Partial<Content<T>>): Promise<Content<T>> {
-      console.log('content!!', content);
-      /*
       const { data } = await useAuthPost<Partial<Content<T>>, Content<T>>('/contents', content);
-      this.current = data;
-      */
-      return null;
+      this.selected = data;
+      return data;
     }
   }
 });

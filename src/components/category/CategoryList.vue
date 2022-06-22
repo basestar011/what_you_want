@@ -49,7 +49,7 @@ function selectCategory($event: Category): void {
 
 <style scoped>
 ul {
-  list-style: square;
+  list-style: none;
 }
 ul li {
   font-size: 1.5em;

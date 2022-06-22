@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import { useCategoryStore } from '@/store/category'
 import { useContentStore } from '@/store/content'
-import { onBeforeMount, ref, computed } from 'vue';
+import { onBeforeMount, ref, computed, watchEffect } from 'vue';
 import CategoryList from '@/components/category/CategoryList.vue';
 import CategoryAdd from '@/components/category/CategoryAdd.vue';
 import ContentHeader from '@/components/content/ContentHeader.vue';
@@ -19,9 +19,8 @@ const categoryStore = useCategoryStore();
 const contentStore = useContentStore();
 const $route = useRoute();
 
+/*
 const categoryAdd = ref(null);
-const isNotCreatePage = computed(() => $route.path.lastIndexOf('/create') === -1);
-
 const addCategory = async (category: Category) => {
   try {
     await categoryStore.addCategory(category);
@@ -34,51 +33,59 @@ const addCategory = async (category: Category) => {
     alert('카테고리 추가 중에 에러가 발생했습니다.');
   }
 }
+*/
 
 onBeforeMount(async () => {
   try {
     const categoryPromise = categoryStore.fetchAllCategory();
     const contentPromise = contentStore.fetchAllContents();
     await Promise.allSettled([categoryPromise, contentPromise]);
+
   } catch (error) {
     const { message } = handleError(error);
     console.log(message);
   }
+
+  watchEffect(() => {
+    contentStore.isNavShow = !$route.path.match('/content/create');
+  });
 });
 </script>
 
 <template>
   <article>
-    <nav v-if="isNotCreatePage" class="nav">
+    <nav v-if="contentStore.isNavShow" class="nav">
       <CategoryList :categories="categoryStore.list" />
       <!-- <CategoryAdd @category:add="addCategory" ref="categoryAdd"/> -->
     </nav>
-    <ContentHeader class="header"/>
-    <section class="section">
-      <router-view></router-view>
-    </section>
+    <div class="content_wrapper">
+      <ContentHeader class="content_header"/>
+      <section class="content_section">
+        <router-view></router-view>
+      </section>
+    </div>
   </article>
 </template>
 
 <style scoped>
 article {
-  display: grid;
-  grid-template-columns: 1fr 4fr;
-  grid-template-rows: minmax(50px, 100px) auto;
+  display: flex;
+  flex-flow: row nowrap;
 }
 
 .nav {
-  grid-column: 1 / 2;
-  grid-row: 1;
+  flex-basis: 150px;
+  flex-grow: 1;
+  border-right: 1px solid lightslategray;
 }
-.header {
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
+.content_wrapper {
+  flex-grow: 8;
+}
+.content_header {
+  
 }
 
-section {
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
+.content_section {
 }
 
 .section-category {

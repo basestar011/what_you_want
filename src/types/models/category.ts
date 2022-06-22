@@ -1,5 +1,6 @@
 export interface Category {
   code: number
   name: string
-  description?: string
+  description?: string,
+  count?: number
 }
