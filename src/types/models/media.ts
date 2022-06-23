@@ -5,4 +5,5 @@ export interface Media {
     srclink: string
     type: string
     size: number
+    ct_code: number
 }

@@ -6,20 +6,17 @@ export default {
 
 <script setup lang="ts">
 import type { Category } from '@/types/models/category'
-import { useContentStore } from '@/store/content'
 import { toRaw } from 'vue'
 
-const props = defineProps<{
+const { category, selected } = defineProps<{
   category: Category,
   selected: boolean
 }>();
-
-const contentStore = useContentStore();
 </script>
 
 <template>
-  <p @click="$emit('category:select', toRaw(props.category))" :class="{ selected: props.selected }">
-    {{ props.category.name }} ({{ contentStore.countByCategory(props.category.code) }})
+  <p @click="$emit('category:select', toRaw(category))" :class="{ selected: selected }">
+    {{ category.name }} ({{ category.count }})
   </p>
 </template>
 

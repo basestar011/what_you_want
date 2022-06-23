@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useAuthGet, useAuthPost, useAuthPatch, useAuthDelete } from '../hooks/http'
 import type { Category } from '@/types/models/category';
 import type { Content } from '@/types/models/content';
+import { useContentStore } from './content'
 
 export type CategoryState = {
   list: Category[],
@@ -19,8 +20,9 @@ export const useCategoryStore = defineStore('category', {
   },
   actions: {
     async fetchAllCategory(): Promise<Category[]> {
-      const { data } = await useAuthGet<Category[]>('/categories');
+      const { data } = await useAuthGet<Category[]>('/categories?query=contents');
       this.list = data;
+      useContentStore().list = data.flatMap(category => category.contents).sort((cont1, cont2) => cont1.code - cont2.code);
       return data;
     },
     async fetchCategoryByCode(code: Category['code']): Promise<Category> {
